@@ -3,8 +3,10 @@ import ExampleComponents from "../Examples";
 import ribbon from "./ribbon.png";
 import logo from "./logo.png";
 import DatePicker from "react-datepicker";
+import "./index.css";
+import { format } from "date-fns";
 
-const Example = () => {
+const Example = ({ holidayList }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
   const [isScrolled, setIsScrolled] = useState(true);
@@ -14,14 +16,36 @@ const Example = () => {
   }, []);
 
   const handleScroll = () => {
-    const Show = window.scrollY < 400;
-    if (Show) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
+    setIsScrolled(window.scrollY < 400);
   };
 
+  const renderCustomDayContents = (day, date) => {
+    // Format incoming date to check if it exist in holiday list or not
+    const formatDate = format(date, "yyyy-MM-dd");
+    const { date: holidayDate, tooltip } =
+      holidayList.find((h) => h.date === formatDate) || {};
+
+    if (holidayDate) {
+      // Formating selected date of calender to remove 'holiday' class if selected date is holiday date
+      const currentSelectedDate = format(startDate, "yyyy-MM-dd");
+      return (
+        <div
+          className={
+            holidayDate === currentSelectedDate
+              ? "holiday-tooltip"
+              : "holiday holiday-tooltip"
+          }
+          tt-title={tooltip}
+        >
+          {day}
+          <div className="tooltip-arrow"></div>
+        </div>
+      );
+    }
+    return day;
+  };
+
+  // Passing the custom day component in renderDayContents prop
   return (
     <DatePicker
       open={isOpen && isScrolled}
@@ -31,9 +55,19 @@ const Example = () => {
         setIsOpen(false);
       }}
       onInputClick={() => setIsOpen(true)}
+      renderDayContents={renderCustomDayContents}
     />
   );
 };
+
+// Holiday List array with dates in 'yyyy-MM-dd' format and tooltip
+const holidayList = [
+  { date: "2023-08-15", tooltip: "Independence Day" },
+  { date: "2023-08-29", tooltip: "Onam" },
+  { date: "2023-08-30", tooltip: "Raksha Bandhan" },
+  { date: "2023-09-07", tooltip: "Janmashtami" },
+  { date: "2023-09-19", tooltip: "Ganesh Chaturthi" },
+];
 
 const Root = () => (
   <div>
@@ -52,7 +86,8 @@ const Root = () => (
           </a>
         </div>
         <div className="hero__example">
-          <Example />
+          {/* Pass Holiday List in the wrapper component of DatePicker */}
+          <Example holidayList={holidayList} />
         </div>
       </div>
     </div>

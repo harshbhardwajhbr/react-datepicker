@@ -132,7 +132,7 @@
     "css:prod": "sass --style compressed src/stylesheets/datepicker.scss > dist/react-datepicker.min.css",
     "css:modules:prod": "sass --style compressed src/stylesheets/datepicker-cssmodules.scss | tee dist/react-datepicker-cssmodules.min.css dist/react-datepicker-min.module.css",
     "css:dev": "sass --style expanded src/stylesheets/datepicker.scss > dist/react-datepicker.css",
-    "css:modules:dev": "sass --style expanded src/stylesheets/datepicker-cssmodules.scss | tee dist/react-datepicker-cssmodules.css dist/react-datepicker.module.css",
+    "css:modules:dev": "sass --style expanded src/stylesheets/datepicker-cssmodules.scss > dist/react-datepicker-cssmodules.css dist/react-datepicker.module.css",
     "build:js": "rollup -c",
     "js:dev": "rollup -cw",
     "prepare": "husky install"
